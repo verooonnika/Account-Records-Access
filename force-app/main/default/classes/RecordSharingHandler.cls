@@ -1,4 +1,6 @@
 public with sharing class RecordSharingHandler {
+
+    private static final String READ_ACCESS = 'Read';
     
     public static Id searchPublicGroup(String groupName){
         Group publicGroup = [SELECT Id, Name FROM group WHERE Name =: groupName LIMIT 1];
@@ -12,10 +14,10 @@ public with sharing class RecordSharingHandler {
             Id groupId = searchPublicGroup(account.Team__c);
             
             AccountShare share  = new AccountShare(AccountId = account.Id,
-                                                   AccountAccessLevel = 'Read', 
+                                                   AccountAccessLevel = READ_ACCESS, 
                                                    UserOrGroupId = groupId,
-                                                   OpportunityAccessLevel = 'Read',
-                                                   CaseAccessLevel = 'Read' );
+                                                   OpportunityAccessLevel = READ_ACCESS,
+                                                   CaseAccessLevel = READ_ACCESS );
             
             shares.add(share);
         }

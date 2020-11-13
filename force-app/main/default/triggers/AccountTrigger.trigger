@@ -5,7 +5,6 @@ trigger AccountTrigger on Account (after insert, after update) {
     }
 
     if(Trigger.isUpdate){
-    
+        AccountTriggerHandler.getChangedTeamRecords(Trigger.oldMap, Trigger.new);
     }
-
 }
