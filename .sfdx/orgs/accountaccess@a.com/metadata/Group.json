@@ -1,0 +1,41 @@
+{
+  "status": 0,
+  "result": [
+    {
+      "createdById": "0052y000001ibanAAA",
+      "createdByName": "Veronika Khlopava",
+      "createdDate": "2020-11-12T18:17:31.000Z",
+      "fileName": "groups/Team_1.group",
+      "fullName": "Team_1",
+      "id": "00G2y000000RwJOEA0",
+      "lastModifiedById": "0052y000001ibanAAA",
+      "lastModifiedByName": "Veronika Khlopava",
+      "lastModifiedDate": "2020-11-12T18:17:31.000Z",
+      "type": "Group"
+    },
+    {
+      "createdById": "0052y000001ibanAAA",
+      "createdByName": "Veronika Khlopava",
+      "createdDate": "2020-11-12T18:18:05.000Z",
+      "fileName": "groups/Team_3.group",
+      "fullName": "Team_3",
+      "id": "00G2y000000RwJYEA0",
+      "lastModifiedById": "0052y000001ibanAAA",
+      "lastModifiedByName": "Veronika Khlopava",
+      "lastModifiedDate": "2020-11-12T18:18:37.000Z",
+      "type": "Group"
+    },
+    {
+      "createdById": "0052y000001ibanAAA",
+      "createdByName": "Veronika Khlopava",
+      "createdDate": "2020-11-12T18:17:46.000Z",
+      "fileName": "groups/Team_2.group",
+      "fullName": "Team_2",
+      "id": "00G2y000000RwJTEA0",
+      "lastModifiedById": "0052y000001ibanAAA",
+      "lastModifiedByName": "Veronika Khlopava",
+      "lastModifiedDate": "2020-11-12T18:26:42.000Z",
+      "type": "Group"
+    }
+  ]
+}
