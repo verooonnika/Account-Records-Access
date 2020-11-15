@@ -10,7 +10,7 @@ public with sharing class AccountTriggerHandler {
         for(Account newAccount: newAccounts){
             Account oldAccount = oldAccounts.get(newAccount.Id);
             
-            if(newAccount.Team__c != oldAccount.Team__c){
+            if((newAccount.Team__c != oldAccount.Team__c) || (newAccount.OwnerId != oldAccount.OwnerId)){
                 changedTeamAccounts.add(newAccount);
             }
         }
