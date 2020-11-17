@@ -4,25 +4,24 @@ public with sharing class RecordSharingHandler {
     
     public static void shareReadAccess(List<account> accounts){
         List<Group> groups = getPublicGroups();
+        Map<String, Group> groupsMap = getPublicGroupsMap(groups);
+        List<Id> groupIds = getGroupIds(groups);
         List<Id> accountIds = getAccountIds(accounts);
-        List<AccountShare> sharesToDelete = getAccountShares(accountIds);
+        List<AccountShare> sharesToDelete = getAccountShares(accountIds, groupIds);
         
         Database.delete(sharesToDelete, false);
         
         List<AccountShare> shares = new List<AccountShare>();
         
         for(Account account: accounts){
-            for(Group publicGroup: groups){
-                if(account.Team__c == publicGroup.Name){
-                    AccountShare share = new AccountShare(AccountId = account.Id,
-                                                          AccountAccessLevel = READ_ACCESS, 
-                                                          UserOrGroupId = publicGroup.Id,
-                                                          OpportunityAccessLevel = READ_ACCESS,
-                                                          CaseAccessLevel = READ_ACCESS );
-                    
-                    shares.add(share);
-                }
-            }            
+            Group teamGroup = groupsMap.get(account.Team__c);
+            AccountShare share = new AccountShare(AccountId = account.Id,
+                                                  AccountAccessLevel = READ_ACCESS, 
+                                                  UserOrGroupId = teamGroup.Id,
+                                                  OpportunityAccessLevel = READ_ACCESS,
+                                                  CaseAccessLevel = READ_ACCESS );
+            
+            shares.add(share);           
         }
         
         List<Database.SaveResult> saveResults = Database.insert(shares, false);
@@ -35,7 +34,28 @@ public with sharing class RecordSharingHandler {
     }
     
     public static List<Group> getPublicGroups(){
-        return [SELECT Id, Name FROM group];
+        List<String> teamNames = new List<String>();
+        
+        Schema.DescribeFieldResult fieldRes = Account.Team__c.getDescribe();
+        List<Schema.PicklistEntry> entries = fieldRes.getPicklistValues();
+        
+        for(Schema.PicklistEntry en: entries){
+            teamNames.add(en.getLabel());
+        } 
+        
+        List<Group> groups = [SELECT Id, Name FROM group WHERE Name IN: teamNames];
+        return groups;
+    }
+    
+    public static Map<String, Group> getPublicGroupsMap(List<Group> groups){
+        Map<String, Group> groupsMap = new Map<String, Group>();
+        
+        for(Group publicGroup: groups){
+            groupsMap.put(publicGroup.Name, publicGroup);
+            
+        }
+        
+        return groupsMap;
     }
     
     public static List<Id> getAccountIds(List<Account> accounts){
@@ -47,7 +67,18 @@ public with sharing class RecordSharingHandler {
         return accountIds;
     }
     
-    public static List<AccountShare> getAccountShares(List<Id> accountIds){
-        return [SELECT Id, AccountId, AccountAccessLevel, UserOrGroupId, OpportunityAccessLevel, CaseAccessLevel FROM AccountShare WHERE AccountId IN: accountIds];
+    public static List<Id> getGroupIds(List<Group> groups){
+        List<Id> groupIds = new List<Id>();
+        for(Group publicGroup: groups){
+            groupIds.add(publicGroup.Id);
+        }
+        
+        return groupIds;
+    }
+    
+    public static List<AccountShare> getAccountShares(List<Id> accountIds, List<Id> groupIds){
+        return [SELECT Id, AccountId, AccountAccessLevel, UserOrGroupId, OpportunityAccessLevel, CaseAccessLevel
+                FROM AccountShare WHERE AccountId IN: accountIds
+                AND UserOrGroupId IN: groupIds];
     }
 }
